@@ -1,0 +1,24 @@
+frameworkVersion: "3"
+
+service: slack-wordle
+
+plugins:
+  - serverless-esbuild
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+
+functions:
+  default:
+    handler: src/handler.default
+    memorySize: 128
+    events:
+      - schedule: cron(0 11 * * ? *)
+    environment:
+      SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+
+custom:
+  esbuild:
+    target: node16
