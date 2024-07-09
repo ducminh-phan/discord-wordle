@@ -1,6 +1,6 @@
 frameworkVersion: "3"
 
-service: slack-wordle
+service: discord-wordle
 
 plugins:
   - serverless-esbuild
@@ -17,7 +17,7 @@ functions:
     events:
       - schedule: cron(0 11 * * ? *)
     environment:
-      SLACK_WEBHOOK_URL: ${env:SLACK_WEBHOOK_URL}
+      DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
 
 custom:
   esbuild:
