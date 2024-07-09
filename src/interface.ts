@@ -20,11 +20,3 @@ export interface DictionaryAPIResponse {
   phonetics: Phonetic[];
   meanings: Meaning[];
 }
-
-export interface Block {
-  type: string;
-  text?: {
-    type: "plain_text" | "mrkdwn";
-    text: string;
-  };
-}

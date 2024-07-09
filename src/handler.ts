@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import type { Block, DictionaryAPIResponse, WordleSolution } from "./interface";
+import type { DictionaryAPIResponse, WordleSolution } from "./interface";
 
 const get = async <T>(url: string): Promise<T | null> => {
   try {
@@ -40,18 +40,7 @@ export default async () => {
 
   const { solution, days_since_launch: index } = rawSolution;
 
-  const blocks: Block[] = [
-    {
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: `Wordle ${index}'s Answer: *${solution.toUpperCase()}*`,
-      },
-    },
-    {
-      type: "divider",
-    },
-  ];
+  let content = `## Wordle ${index}'s Answer: \`${solution.toUpperCase()}\`\n`;
 
   const dictAPIResponse = await get<DictionaryAPIResponse[]>(
     `https://api.dictionaryapi.dev/api/v2/entries/en/${solution.toLowerCase()}`,
@@ -62,36 +51,24 @@ export default async () => {
     if (dictAPIData?.phonetics?.length ?? 0 >= 0) {
       for (const phonetic of dictAPIData.phonetics) {
         if (phonetic?.text !== undefined) {
-          blocks.push({
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: `Phonetic: \`${phonetic.text}\``,
-            },
-          });
+          content += `### Phonetic\n\`${phonetic.text}\`\n`;
           break;
         }
       }
     }
 
     if (dictAPIData?.meanings?.length ?? 0 >= 0) {
-      let text = "Meanings";
+      content += `### Meaning\n`;
       for (const meaning of dictAPIData.meanings.slice(0, 3)) {
-        text += `\n\t• ${meaning.partOfSpeech}`;
+        content += `- ${meaning.partOfSpeech}\n`;
         for (const definition of meaning.definitions.slice(0, 3)) {
-          text += `\n\t\t- ${definition.definition}`;
+          content += `  - ${definition.definition}\n`;
         }
       }
-
-      blocks.push({
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text,
-        },
-      });
     }
   }
 
-  await axios.post(process.env.SLACK_WEBHOOK_URL!, { blocks });
+  await axios.post(process.env.DISCORD_WEBHOOK_URL!, {
+    content,
+  });
 };

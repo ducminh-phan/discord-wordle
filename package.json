@@ -8,7 +8,9 @@
   "license": "MIT",
   "packageManager": "pnpm@9.5.0",
   "scripts": {
-    "deploy": "dotenv serverless deploy",
+    "deploy": "dotenv -- serverless deploy",
+    "dev": "dotenv -e .env.local -- serverless invoke local --function default",
+    "format": "prettier --write src",
     "lint": "eslint --cache --fix src",
     "prepare": "husky install"
   },
