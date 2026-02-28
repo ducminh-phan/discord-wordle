@@ -1,13 +1,8 @@
-frameworkVersion: "3"
-
 service: discord-wordle
-
-plugins:
-  - serverless-esbuild
 
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs24.x
   region: us-east-1
 
 functions:
@@ -18,7 +13,3 @@ functions:
       - schedule: cron(0 11 * * ? *)
     environment:
       DISCORD_WEBHOOK_URL: ${env:DISCORD_WEBHOOK_URL}
-
-custom:
-  esbuild:
-    target: node16
