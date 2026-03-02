@@ -32,7 +32,7 @@ const getSolution = async (): Promise<WordleSolution | null> => {
   );
 };
 
-export default async () => {
+export const handler = async () => {
   const rawSolution = await getSolution();
   if (rawSolution === null) {
     return;
